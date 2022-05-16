@@ -4,10 +4,11 @@ import pulumi_docker as docker
 import pulumi_gcp as gcp
 
 
+project_name = "pulumi-demo"
 location = "australia-southeast1"
 
 # Build API image:
-api_image_name = "playground-sample-api"
+api_image_name = f"{project_name}-sample-api"
 api_image = docker.Image(
     api_image_name, 
     image_name=f"gcr.io/{gcp.config.project}/{api_image_name}/latest", 
@@ -18,7 +19,7 @@ api_image = docker.Image(
 )
 
 # Build Cloud Run Service:
-api_service_name = "playground-sample-api"
+api_service_name = f"{project_name}-sample-api"
 api_service = gcp.cloudrun.Service(
     api_service_name,
     location=location,
@@ -48,7 +49,7 @@ api_service = gcp.cloudrun.Service(
 )
 
 # Open the cloud run service for everyone:
-iam_resource_name = "playground-sample-iam"
+iam_resource_name = f"{project_name}-sample-iam"
 iam = gcp.cloudrun.IamMember(
     resource_name=iam_resource_name,
     service=api_service.name,
@@ -58,7 +59,7 @@ iam = gcp.cloudrun.IamMember(
 )
 
 # Setup the static bucket
-static_files_bucket_name = "playground-sample-static-bucket"
+static_files_bucket_name = f"{project_name}-sample-static-bucket"
 static_files_bucket = gcp.storage.Bucket(
     static_files_bucket_name,
     name=static_files_bucket_name,
